@@ -1,0 +1,6 @@
+beautifulsoup4==4.13.3
+nested_lookup==0.2.25
+Requests==2.32.3
+tqdm==4.67.1
+concurrent
+nested-lookup
