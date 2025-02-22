@@ -26,3 +26,7 @@ BeautifulSoup (bs4): To parse and extract data from HTML content.
       pip install -r requirements.txt
       python main.py
 Sample Output:
+
+Excel public file url : https://docs.google.com/spreadsheets/d/1JTzZKCDyhbypaqfYR3G70LzbAc4u5Tdo5Ju4ojtv08U/edit?usp=sharing
+
+#Note: Quantity is extracted from the title with the use of LLM.
