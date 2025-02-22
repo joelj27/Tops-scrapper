@@ -65,15 +65,16 @@ def get_product_data(data):
         url = "https://l7mux9u4cp-dsn.algolia.net/1/indexes/tops_en_products_recommened_sort_order_desc/{}?x-algolia-agent=Algolia%20for%20JavaScript%20(4.5.1)%3B%20Browser%3B%20instantsearch.js%20(4.44.0)%3B%20JS%20Helper%20(3.10.0)&attributesToRetrieve=%5B%22brand_name%22%2C%22categories%22%2C%22consumer_unit%22%2C%22discount_amount%22%2C%22final_price%22%2C%22image%22%2C%22marketplace_seller%22%2C%22name%22%2C%22price%22%2C%22sku%22%2C%22stock%22%2C%22type_id%22%2C%22url_key%22%2C%22visibility_catalog%22%2C%22gtm_data%22%2C%22promotions%22%2C%22product_badge%22%2C%22country_of_product%22%2C%22bundle_options%22%2C%22is_seasonal%22%5D".format(data["url"].split("-")[-1])
         response = requests.request("GET", url, headers=headers, data=payload)
         api_data=json.loads(response.text)
-        data["Price"]=api_data["consumer_unit"]
+        data["Quantity "]=""
+        data["Price"]=api_data["final_price"]["THB"]["cluster_1"]
         data["Barcode Number"]=api_data["sku"]
-        data["Currency"]=api_data["final_price"]["THB"]["cluster_1"]
         try:
             data["Labels"]=api_data["product_badge"]["label"]
         except:
             data["Labels"]=None
         return data
-    except:
+    except Exception as e:
+        print(e)
         with open('Error.txt', 'a') as file:
             file.write(data["url"]+"\n")
     
@@ -112,14 +113,14 @@ for key,value in all_catagory_name_id.items():
     # break
 with open('Catagory.json'.format(key), 'w') as f:
         json.dump(data_dict, f)
+data_dict=json.load(open('Catagory.json'))
     
 print("Product page sourcing started...")
     
 for key,value in data_dict.items():
     print("Sourcing Product {} Page....".format(key))
     dic_value=[{"url":i} for i in value]
-    with ThreadPoolExecutor(max_workers=30) as exe:
+    with ThreadPoolExecutor(max_workers=64) as exe:
         d=list(tqdm.tqdm(exe.map(get_product_data,dic_value),total=len(dic_value)))
     with open('{}.json'.format(key), 'w') as f:
         json.dump(dic_value, f)
-    
